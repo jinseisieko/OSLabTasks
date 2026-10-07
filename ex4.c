@@ -73,7 +73,7 @@ int main() {
         if (argc == 0) continue;
 
         if (strcmp(args[0], "exit") == 0) {
-            printf("Выход из shell.\n");
+            printf("Exit from shell.\n");
             break;
         }
 
