@@ -14,3 +14,10 @@ gcc ex3.c -o ex3
 ./ex3 3 &
 pstree -p | grep ex3
 ```
+
+## Exercise 3
+
+```bash
+gcc ex4.c -o ex4
+./ex4
+```
