@@ -8,3 +8,9 @@ gcc ex1.c -o ex1
 ```
 
 ## Exercise 2
+
+```bash
+gcc ex3.c -o ex3
+./ex3 3 &
+pstree -p | grep ex3
+```
