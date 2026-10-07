@@ -96,14 +96,14 @@ int main() {
             background = 1;
             cmd_start = 1;
             if (args[cmd_start] == NULL) {
-                printf("Использование: bg <команда> [аргументы]\n");
+                printf("Using: bg <command> [args]\n");
                 continue;
             }
         }
 
         char *cmd_path = find_command_path(args[cmd_start]);
         if (cmd_path == NULL) {
-            printf("myshell: команда не найдена: %s\n", args[cmd_start]);
+            printf("myshell: command not found: %s\n", args[cmd_start]);
             continue;
         }
 
