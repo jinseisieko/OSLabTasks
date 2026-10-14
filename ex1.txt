@@ -1,0 +1,10 @@
+Findings on Inter-Process Communication via Pipes and FIFO files:
+
+1. Observation of Message Distribution:
+When running the publisher and multiple subscribers, every subscriber successfully receives every message typed into the publisher's stdin. 
+
+2. Why we need to create n named pipes for n subscribers:
+Named pipes (FIFOs) behave like standard files, but data read from them is consumed. If all subscribers were to open and read from a *single* shared named pipe, the Linux kernel would distribute the incoming data stream among the readers (typically in a round-robin or arbitrary fashion). This means each message would be read by only ONE subscriber, resulting in lost messages for the others. To implement a true publish/subscribe (broadcast) model where EVERY subscriber receives EVERY message, we must create a separate named pipe for each subscriber. The publisher reads a message from stdin and writes a distinct copy of that message to each of the `n` named pipes. Each subscriber exclusively opens and reads from its own dedicated pipe (e.g., `/tmp/ex1/s1`), ensuring no message is "stolen" by another process.
+
+3. Synchronization and SIGPIPE Prevention:
+A critical finding is the blocking behavior of the `open()` system call on FIFOs. Opening a FIFO with `O_WRONLY` blocks the process until another process opens the same FIFO with `O_RDONLY` (and vice versa). This built-in kernel synchronization is crucial. By relying on this blocking behavior, the publisher's child processes naturally wait for the subscribers to be ready and listening before attempting to write. This elegantly prevents the `SIGPIPE` error, which would otherwise occur if a process attempted to write to a pipe or FIFO that had no active readers.
